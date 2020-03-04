@@ -5,13 +5,20 @@
  */
 package servlets;
 
+import dataaccess.NoteDB;
+import dataaccess.NotesDBException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import models.Note;
 
 /**
  *
@@ -32,18 +39,18 @@ public class NoteServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet NoteServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet NoteServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+//        try (PrintWriter out = response.getWriter()) {
+//            /* TODO output your page here. You may use following sample code. */
+//            out.println("<!DOCTYPE html>");
+//            out.println("<html>");
+//            out.println("<head>");
+//            out.println("<title>Servlet NoteServlet</title>");            
+//            out.println("</head>");
+//            out.println("<body>");
+//            out.println("<h1>Servlet NoteServlet at " + request.getContextPath() + "</h1>");
+//            out.println("</body>");
+//            out.println("</html>");
+//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -58,7 +65,50 @@ public class NoteServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
+        
+        String action = request.getParameter("action");
+        NoteDB nb = new NoteDB();
+        List<Note> notes = null;
+        
+        if(action == null)
+        {
+            request.setAttribute("addorsave", "Add");
+        }
+        else
+        if(action.equals("edit"))
+        {
+            try{
+            int selectedNote = Integer.parseInt(request.getParameter("selectedNote"));
+            Note note = nb.get(selectedNote);
+            request.setAttribute("titleEdit", note.getTitle());
+            request.setAttribute("contentEdit", note.getContents());
+            request.setAttribute("idToBeDeleted", note.getNoteid());
+        }
+            catch(NumberFormatException e)
+            {
+                request.setAttribute("errorMessage", "Error on parsing selected note's id");
+            } catch (NotesDBException ex) {
+                Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            request.setAttribute("addorsave", "Save");
+            
+        }
+        else
+        {
+            
+        }
+            
+        
+        
+        try 
+        {
+            notes = nb.getAll();
+        } catch (NotesDBException ex) {
+            Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        request.setAttribute("notes", notes);
+        getServletContext().getRequestDispatcher("/WEB-INF/notes.jsp").forward(request, response);
     }
 
     /**
@@ -72,7 +122,56 @@ public class NoteServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String action = request.getParameter("action");
+        List<Note> notes = null;
+        NoteDB nb = new NoteDB();
+        String title = request.getParameter("title");
+        String content = request.getParameter("content");
+        Note newNote=null;
+        if(action.equals("Add"))
+        {
+            newNote = new Note(0, new Date(), title, content);
+            try {
+                nb.insert(newNote);
+                request.setAttribute("errorMessage", "Add successfully!");
+            } catch (NotesDBException ex) {
+                Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else
+        if(action.equals("Save")){
+            int selectedNote = Integer.parseInt(request.getParameter("selectedNote"));
+            
+            try {
+                newNote = new Note();
+                nb.update(newNote);
+                request.setAttribute("errorMessage", "Update successfully!");
+            } catch (NotesDBException ex) {
+                Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else
+        {
+            int selectedNote = Integer.parseInt(request.getParameter("selectedNote"));
+            try {
+                newNote = nb.get(selectedNote);
+                nb.delete(newNote);
+                request.setAttribute("errorMessage", "Delete successfully!");
+            } catch (NotesDBException ex) {
+                Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }    
+        }
+        
+        //processRequest(request, response);
+     try 
+        {
+            request.setAttribute("addorsave", "Add");
+            notes = nb.getAll();
+        } catch (NotesDBException ex) {
+            Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        request.setAttribute("notes", notes);
+        getServletContext().getRequestDispatcher("/WEB-INF/notes.jsp").forward(request, response);
     }
 
     /**
