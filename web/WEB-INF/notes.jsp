@@ -75,6 +75,7 @@ and open the template in the editor.
                 <tr>
                     <td>
                         <input type="submit" value="${addorsave}" name="action">
+                        <input type="hidden" name="selectedNote" value="${idToBeSaved}">
                     </td>
                 </tr>
             </table>

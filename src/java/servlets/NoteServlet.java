@@ -84,6 +84,7 @@ public class NoteServlet extends HttpServlet {
             request.setAttribute("titleEdit", note.getTitle());
             request.setAttribute("contentEdit", note.getContents());
             request.setAttribute("idToBeDeleted", note.getNoteid());
+            request.setAttribute("idToBeSaved", note.getNoteid());
         }
             catch(NumberFormatException e)
             {
@@ -128,6 +129,7 @@ public class NoteServlet extends HttpServlet {
         String title = request.getParameter("title");
         String content = request.getParameter("content");
         Note newNote=null;
+        String selectNote = request.getParameter("selectedNote");
         if(action.equals("Add"))
         {
             newNote = new Note(0, new Date(), title, content);
@@ -140,10 +142,10 @@ public class NoteServlet extends HttpServlet {
         }
         else
         if(action.equals("Save")){
-            int selectedNote = Integer.parseInt(request.getParameter("selectedNote"));
-            
+            int selectedNote = Integer.parseInt(selectNote);
             try {
-                newNote = new Note();
+                Note oldNote = nb.get(selectedNote);
+                newNote = new Note(oldNote.getNoteid(), oldNote.getDatecreated(), title, content);
                 nb.update(newNote);
                 request.setAttribute("errorMessage", "Update successfully!");
             } catch (NotesDBException ex) {
@@ -152,7 +154,7 @@ public class NoteServlet extends HttpServlet {
         }
         else
         {
-            int selectedNote = Integer.parseInt(request.getParameter("selectedNote"));
+            int selectedNote = Integer.parseInt(selectNote);
             try {
                 newNote = nb.get(selectedNote);
                 nb.delete(newNote);
