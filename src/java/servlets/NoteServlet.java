@@ -85,6 +85,7 @@ public class NoteServlet extends HttpServlet {
             request.setAttribute("contentEdit", note.getContents());
             request.setAttribute("idToBeDeleted", note.getNoteid());
             request.setAttribute("idToBeSaved", note.getNoteid());
+            
         }
             catch(NumberFormatException e)
             {

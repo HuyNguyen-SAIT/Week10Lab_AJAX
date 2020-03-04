@@ -23,8 +23,8 @@ and open the template in the editor.
         
         <br>
     <div>
-        <br>
-        ${errorMessage}
+        <br/>
+        <h2>${errorMessage}</h2><br/>
         <table>
             <thead>
                 <tr>
@@ -54,12 +54,15 @@ and open the template in the editor.
                     
         </table>
     </div>
-    <br><br>
+    <br>
+    <c:if test="${idToBeDeleted != null}">
     <form action="note" method="post">
-                            <input type="submit" value="Delete note">
-                            <input type="hidden" name="action" value="delete">
-                            <input type="hidden" name="selectedNote" value="${idToBeDeleted}">
+        
+        <input type="submit" value="Delete note">
+        <input type="hidden" name="action" value="delete">
+        <input type="hidden" name="selectedNote" value="${idToBeDeleted}">
     </form>
+    </c:if>
 <h2>Add Note:</h2>
     <form method="POST" action="note">
             <table>
