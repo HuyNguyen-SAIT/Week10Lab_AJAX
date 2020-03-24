@@ -20,10 +20,8 @@ and open the template in the editor.
     <body>
       
         <h1>Notes!</h1>
-        
-        <br>
     <div>
-        <br/>
+        
         <h2>${errorMessage}</h2><br/>
         <table>
             <thead>
@@ -32,13 +30,15 @@ and open the template in the editor.
                     <th>Title</th>
                     
                 </tr>
+                
             </thead>
+            
             
             <c:forEach var="note" items="${notes}">
             <tbody>
                 <tr>
-                    <td>${note.datecreated}</td>
-                    <td>${note.title}</td>
+                    <td>${note.datecreated}|</td>
+                    <td>${note.title}|</td>
                    
                     <td>
                         <form action="note" method="get">
