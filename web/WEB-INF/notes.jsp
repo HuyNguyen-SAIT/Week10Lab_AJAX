@@ -16,6 +16,8 @@ and open the template in the editor.
         <title>Home page</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="js/register.js"></script>
     </head>
     <body>
       
@@ -63,17 +65,21 @@ and open the template in the editor.
         <input type="hidden" name="selectedNote" value="${idToBeDeleted}">
     </form>
     </c:if>
-<h2>Add Note:</h2>
+<h2>${addorsave} Note:</h2>
+    
     <form method="POST" action="note">
-            <table>
+        <table>
                 <tr>
                     <td><b>Title:</b></td>
                     
-                    <td><input type="text" name="title" value="${titleEdit}"></td>
+                    <td><input type="text" id="title" ${readonly} name="title" value="${titleEdit}"></td>
                 </tr>
                 <tr>
                     <td><b>Contents:</b></td>
-                    <td><textarea name="content">${contentEdit}</textarea></td>
+                    <td>
+                        <textarea onkeyup="autosave()" id="content" name="content">${contentEdit}</textarea>
+                        
+                    </td> 
                 </tr>
                 <tr>
                     <td>
@@ -83,7 +89,7 @@ and open the template in the editor.
                 </tr>
             </table>
         </form>
-    
+    <span id="message"></span>
     </body>
     
 </html>

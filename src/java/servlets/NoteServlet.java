@@ -85,7 +85,8 @@ public class NoteServlet extends HttpServlet {
             request.setAttribute("contentEdit", note.getContents());
             request.setAttribute("idToBeDeleted", note.getNoteid());
             request.setAttribute("idToBeSaved", note.getNoteid());
-            
+            request.setAttribute("readonly", "readonly"); 
+            request.setAttribute("disabled", "disabled");
         }
             catch(NumberFormatException e)
             {
@@ -95,15 +96,32 @@ public class NoteServlet extends HttpServlet {
             }
             request.setAttribute("addorsave", "Save");
             
+            
+            
         }
         else
         {
-            
+//            Note newNote=null;
+//            String selectNote = request.getParameter("selectedNote");
+//            String title = request.getParameter("title");
+//            String content = request.getParameter("content");
+//            int selectedNote = Integer.parseInt(selectNote);
+//            try {
+//                Note oldNote = nb.get(selectedNote);
+//                newNote = new Note(oldNote.getNoteid(), oldNote.getDatecreated(), title, content);
+//                nb.update(newNote);
+//                request.setAttribute("errorMessage", "Update successfully!");
+//                request.setAttribute("readonly", ""); 
+//            } catch (NotesDBException ex) {
+//                Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//            response.getWriter().write("Updated");
+//            return;
         }
             
         
         
-        try 
+    try 
         {
             notes = nb.getAll();
         } catch (NotesDBException ex) {
@@ -149,6 +167,7 @@ public class NoteServlet extends HttpServlet {
                 newNote = new Note(oldNote.getNoteid(), oldNote.getDatecreated(), title, content);
                 nb.update(newNote);
                 request.setAttribute("errorMessage", "Update successfully!");
+                request.setAttribute("readonly", ""); 
             } catch (NotesDBException ex) {
                 Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
             }

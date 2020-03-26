@@ -71,6 +71,28 @@ public class NoteDB {
             em.close();
         }
     }
+    
+    public Note get(String content) throws NotesDBException {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        List<Note> noteList;
+        Note note = null;
+        try {
+             noteList = em.createNamedQuery("Note.findAll", Note.class).getResultList();
+             
+             for(Note each_note: noteList)
+             {
+                 if(each_note.getContents().equals(content))
+                 {
+                     note = each_note;
+                     break;
+                 }
+             }
+             
+            return note;
+        } finally {
+            em.close();
+        }
+    }
 
     public int delete(Note note) throws NotesDBException {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
