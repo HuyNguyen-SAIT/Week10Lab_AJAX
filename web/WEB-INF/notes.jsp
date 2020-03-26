@@ -61,8 +61,8 @@ and open the template in the editor.
     <form action="note" method="post">
         
         <input type="submit" value="Delete note">
-        <input type="hidden" name="action" value="delete">
-        <input type="hidden" name="selectedNote" value="${idToBeDeleted}">
+        <input type="hidden" name="action" value="Delete">
+        <input type="hidden" name="selectedNote" value="${idToBeDeleted}" id="selectedNote">
     </form>
     </c:if>
 <h2>${addorsave} Note:</h2>
@@ -77,19 +77,19 @@ and open the template in the editor.
                 <tr>
                     <td><b>Contents:</b></td>
                     <td>
-                        <textarea onkeyup="autosave()" id="content" name="content">${contentEdit}</textarea>
+                        <textarea id="content" name="content">${contentEdit}</textarea> <span id="message"></span>
                         
                     </td> 
                 </tr>
                 <tr>
                     <td>
-                        <input type="submit" value="${addorsave}" name="action">
-                        <input type="hidden" name="selectedNote" value="${idToBeSaved}">
+                        <input type="submit" value="${addorsave}">
+                        <input type="hidden" name="action" value="${addorsave}">
                     </td>
                 </tr>
             </table>
         </form>
-    <span id="message"></span>
+    
     </body>
     
 </html>

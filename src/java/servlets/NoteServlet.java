@@ -115,8 +115,8 @@ public class NoteServlet extends HttpServlet {
 //            } catch (NotesDBException ex) {
 //                Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
 //            }
-//            response.getWriter().write("Updated");
-//            return;
+            response.getWriter().write("Updated");
+            return;
         }
             
         
@@ -148,7 +148,8 @@ public class NoteServlet extends HttpServlet {
         String title = request.getParameter("title");
         String content = request.getParameter("content");
         Note newNote=null;
-        String selectNote = request.getParameter("selectedNote");
+        String selectNote;
+        
         if(action.equals("Add"))
         {
             newNote = new Note(0, new Date(), title, content);
@@ -160,20 +161,25 @@ public class NoteServlet extends HttpServlet {
             }
         }
         else
-        if(action.equals("Save")){
+        if(action.equals("save")){
+            selectNote = request.getParameter("id");
             int selectedNote = Integer.parseInt(selectNote);
             try {
                 Note oldNote = nb.get(selectedNote);
-                newNote = new Note(oldNote.getNoteid(), oldNote.getDatecreated(), title, content);
+                newNote = new Note(oldNote.getNoteid(), oldNote.getDatecreated(), oldNote.getTitle(), content);
                 nb.update(newNote);
                 request.setAttribute("errorMessage", "Update successfully!");
                 request.setAttribute("readonly", ""); 
             } catch (NotesDBException ex) {
                 Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
+            response.getWriter().write("Updated");
+            return;
         }
         else
+            if(action.equals("Delete"))
         {
+            selectNote = request.getParameter("selectedNote");
             int selectedNote = Integer.parseInt(selectNote);
             try {
                 newNote = nb.get(selectedNote);
@@ -183,6 +189,10 @@ public class NoteServlet extends HttpServlet {
                 Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
             }    
         }
+        else
+            {
+                
+            }
         
         //processRequest(request, response);
      try 

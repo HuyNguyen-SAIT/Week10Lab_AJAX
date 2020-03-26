@@ -1,7 +1,9 @@
 $(document).ready(function() {
    $("textarea").keyup(function() {
-       $.post("note?action=Save&title="+$("#title").val()+"&content=" + $("#content").val(), function() {
-           //document.getElementById("message").innerHTML = response;
+       
+       $.post("note?action=save&id="+$("#selectedNote").val()+"&content=" + $("#content").val(), function(response) {
+           
+           document.getElementById("message").innerHTML = response;
            
        });
    });
