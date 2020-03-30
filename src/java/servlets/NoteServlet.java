@@ -94,7 +94,7 @@ public class NoteServlet extends HttpServlet {
             } catch (NotesDBException ex) {
                 Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-            request.setAttribute("addorsave", "Save");
+            request.setAttribute("addorsave", "Return to add note");
             
             
             
@@ -115,7 +115,7 @@ public class NoteServlet extends HttpServlet {
 //            } catch (NotesDBException ex) {
 //                Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
 //            }
-            response.getWriter().write("Updated");
+            //response.getWriter().write("Updated");
             return;
         }
             
@@ -147,9 +147,10 @@ public class NoteServlet extends HttpServlet {
         NoteDB nb = new NoteDB();
         String title = request.getParameter("title");
         String content = request.getParameter("content");
-        Note newNote=null;
+        Note newNote;
+        int selectedNote=0;
         String selectNote;
-        
+        String changedContent="";
         if(action.equals("Add"))
         {
             newNote = new Note(0, new Date(), title, content);
@@ -163,7 +164,7 @@ public class NoteServlet extends HttpServlet {
         else
         if(action.equals("save")){
             selectNote = request.getParameter("id");
-            int selectedNote = Integer.parseInt(selectNote);
+            selectedNote = Integer.parseInt(selectNote);
             try {
                 Note oldNote = nb.get(selectedNote);
                 newNote = new Note(oldNote.getNoteid(), oldNote.getDatecreated(), oldNote.getTitle(), content);
@@ -174,13 +175,15 @@ public class NoteServlet extends HttpServlet {
                 Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
             response.getWriter().write("Updated");
+            
+                        
             return;
         }
         else
             if(action.equals("Delete"))
         {
             selectNote = request.getParameter("selectedNote");
-            int selectedNote = Integer.parseInt(selectNote);
+            selectedNote = Integer.parseInt(selectNote);
             try {
                 newNote = nb.get(selectedNote);
                 nb.delete(newNote);
@@ -190,11 +193,29 @@ public class NoteServlet extends HttpServlet {
             }    
         }
         else
+                if(action.equals("Return to add note"))
             {
-                
+                //getServletContext().getRequestDispatcher("/WEB-INF/notes.jsp").forward(request, response);
+                doGet(request,response);
             }
+        else
+                    if(action.equals("reset"))
+                    {
         
-        //processRequest(request, response);
+            try {
+            //processRequest(request, response);
+            selectNote = request.getParameter("id");
+            changedContent = nb.get(selectNote).getContents();
+            if(!content.equals(changedContent))
+            {
+                request.setAttribute("content", nb.get(selectNote).getContents());
+                getServletContext().getRequestDispatcher("/WEB-INF/notes.jsp").forward(request, response);
+            }
+        } catch (NotesDBException ex) {
+            Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                    }
+    
      try 
         {
             request.setAttribute("addorsave", "Add");

@@ -83,7 +83,7 @@ and open the template in the editor.
                 </tr>
                 <tr>
                     <td>
-                        <input type="submit" value="${addorsave}">
+                        <input type="submit" value="${addorsave}" id="submitBTN">
                         <input type="hidden" name="action" value="${addorsave}">
                     </td>
                 </tr>
